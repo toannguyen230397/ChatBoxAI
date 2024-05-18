@@ -39,7 +39,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void _DeleteChat(DeleteChat event, Emitter<ChatState> emit) {
-    ChatDatabase().removeDoc(docID: event.chat.roomID);
+    // ChatDatabase().removeDoc(docID: event.chat.roomID);
     state.chat.remove(event.chat);
     emit(ChatStateUpdate(chat: state.chat));
   }
