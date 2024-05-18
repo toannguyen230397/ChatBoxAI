@@ -11,9 +11,22 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<DeleteChat>(_DeleteChat);
   }
 
-  void _CreateChat (CreateChat event, Emitter<ChatState> emit) {
-    state.chat.add(event.chat);
-    emit(ChatStateUpdate(chat: state.chat));
+  void _CreateChat(CreateChat event, Emitter<ChatState> emit) {
+    bool found = false;
+
+    for (int i = 0; i < state.chat.length; i++) {
+      if (event.chat.roomID == state.chat[i].roomID) {
+        state.chat[i] = event.chat;
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      state.chat.add(event.chat);
+    }
+
+    emit(ChatStateUpdate(chat: List.from(state.chat)));
   }
 
   void _UpdateChat(UpdateChat event, Emitter<ChatState> emit) async {
@@ -25,7 +38,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(ChatStateUpdate(chat: state.chat));
   }
 
-  void _DeleteChat (DeleteChat event, Emitter<ChatState> emit) {
+  void _DeleteChat(DeleteChat event, Emitter<ChatState> emit) {
     ChatDatabase().removeDoc(docID: event.chat.roomID);
     state.chat.remove(event.chat);
     emit(ChatStateUpdate(chat: state.chat));

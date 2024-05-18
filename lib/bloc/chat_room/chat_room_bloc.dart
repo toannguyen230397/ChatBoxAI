@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:chat_box_ai/api/api_helper.dart';
 import 'package:chat_box_ai/model/chat_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,40 +6,14 @@ part 'chat_room_state.dart';
 
 class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   ChatRoomBloc() : super(ChatRoomStateInitial(chatRoom: [])) {
-    on<UpdateChatRoom>(_UpdateChatRoom);
+    on<SendMessage>(_SendMessage);
     on<DeleteChatRoom>(_DeleteChatRoom);
+    on<CreateChatRoom>(_CreateChatRoom);
+    on<UpdateChatRoom>(_UpdateChatRoom);
   }
 
-  // void _UpdateChatRoom(
-  //     UpdateChatRoom event, Emitter<ChatRoomState> emit) async {
-  //   state.chatRoom = event.chatRoom;
-  //   emit(ChatRoomStateUpdate(chatRoom: state.chatRoom));
-  // }
-
-  // Future<void> _UpdateChatRoom(
-  //     UpdateChatRoom event, Emitter<ChatRoomState> emit) async {
-  //   state.chatRoom = event.chatRoom;
-  //   emit(ChatRoomStateUpdate(chatRoom: state.chatRoom));
-    
-  // await Future.delayed(Duration(seconds: 2), () async {
-  //     final currentChatRoom = event.chatRoom[0];
-  //     List<dynamic> history = currentChatRoom.message;
-  //     history.length > 0 ? history.removeLast() : null;
-  //     final messageList = await ChatAPI()
-  //         .sendRequest(event.inputMessage, history);
-  //     final chat = Chat(
-  //       roomID: currentChatRoom.roomID,
-  //       roomTitle: currentChatRoom.roomTitle,
-  //       creatTime: currentChatRoom.creatTime,
-  //       message: messageList,
-  //     );
-  //     List<Chat> newChatRoom = [chat];
-  //     emit(ChatRoomStateUpdate(chatRoom: newChatRoom));
-  //   });
-  // }
-
-  Future<void> _UpdateChatRoom(
-      UpdateChatRoom event, Emitter<ChatRoomState> emit) async {
+  Future<void> _SendMessage(
+      SendMessage event, Emitter<ChatRoomState> emit) async {
     state.chatRoom = event.chatRoom;
     emit(ChatRoomStateUpdate(chatRoom: state.chatRoom));
     
@@ -62,8 +34,19 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
       List<Chat> newChatRoom = [chat];
       emit(ChatRoomStateUpdate(chatRoom: newChatRoom));
     }catch(e){
-      print(e);
+      emit(ChatRoomStateError(errorMessage: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau :(', chatRoom: state.chatRoom));
+      print('An unexpected error occurred: $e');
     }
+  }
+
+  void _CreateChatRoom(CreateChatRoom event, Emitter<ChatRoomState> emit) {
+    state.chatRoom = [];
+    emit(ChatRoomStateUpdate(chatRoom: state.chatRoom));
+  }
+
+  void _UpdateChatRoom(UpdateChatRoom event, Emitter<ChatRoomState> emit) {
+    state.chatRoom = event.chatRoom;
+    emit(ChatRoomStateUpdate(chatRoom: state.chatRoom));
   }
 
   void _DeleteChatRoom(DeleteChatRoom event, Emitter<ChatRoomState> emit) {

@@ -4,9 +4,8 @@ abstract class ChatEvent {}
 
 class CreateChat extends ChatEvent {
   final Chat chat;
-  final String smg;
 
-  CreateChat({required this.chat, required this.smg});
+  CreateChat({required this.chat});
 }
 
 class DeleteChat extends ChatEvent {

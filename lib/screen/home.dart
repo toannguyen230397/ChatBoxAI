@@ -1,5 +1,7 @@
+import 'package:chat_box_ai/bloc/chat/chat_bloc.dart';
 import 'package:chat_box_ai/bloc/chat_room/chat_room_bloc.dart';
 import 'package:chat_box_ai/model/chat_model.dart';
+import 'package:chat_box_ai/widget/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -25,15 +27,31 @@ class HomeScreen extends StatelessWidget {
     }
 
     return Scaffold(
+        drawer: DrawerBuilder(),
+        drawerScrimColor: Colors.white10,
         appBar: AppBar(
           backgroundColor: Colors.black,
-          leading: IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.menu,
-              color: Colors.white38,
-            ),
-          ),
+          leading: Builder(
+            builder: (context) {
+              return IconButton(
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                  final chatRoom = context.read<ChatRoomBloc>().state.chatRoom;
+                  if (chatRoom.isNotEmpty) {
+                    List message = chatRoom[0].message;
+                    if(message.length > 1) {
+                      final newChatRoom = chatRoom[0];
+                      context.read<ChatBloc>().add(CreateChat(chat: newChatRoom));
+                    }                    
+                  }
+                },
+                icon: Icon(
+                  Icons.menu,
+                  color: Colors.white38,
+                ),
+              );
+            },
+          ), 
           title: Text(
             'power by Gemini AI',
             style: TextStyle(
@@ -41,10 +59,46 @@ class HomeScreen extends StatelessWidget {
                 fontSize: 16,
                 fontWeight: FontWeight.bold),
           ),
+          actions: [
+            BlocBuilder<ChatRoomBloc, ChatRoomState>(
+              builder: (context, state) {
+                if(state is ChatRoomStateUpdate && state.chatRoom.isNotEmpty || state is ChatRoomStateError) {
+                  return IconButton(
+                    onPressed: () {
+                      context.read<ChatRoomBloc>().add(CreateChatRoom());
+                    },
+                    icon: Icon(Icons.add_circle_outline, color: Colors.white38,)
+                  );
+                } else {
+                  return Container();
+                }
+              }
+            )
+          ],
         ),
         backgroundColor: Color(0xFF303030),
         body: SafeArea(child: BlocBuilder<ChatRoomBloc, ChatRoomState>(
           builder: ((context, state) {
+            if (state is ChatRoomStateError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      'assets/animations/error_animation.json',
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      state.errorMessage,
+                      style: TextStyle(
+                          color: Colors.white38, fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              );
+            }
             if (state is ChatRoomStateLoading) {
               final chatRoom = state.chatRoom[0];
               List messageList = chatRoom.message;
@@ -183,6 +237,13 @@ class HomeScreen extends StatelessWidget {
                               flex: 1,
                               child: IconButton(
                                 onPressed: () {
+                                  final FocusScopeNode currentScope =
+                                      FocusScope.of(context);
+                                  if (!currentScope.hasPrimaryFocus &&
+                                      currentScope.hasFocus) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  }
                                   if (inputController.text.trim() == '') {
                                     print('empty input');
                                   } else {
@@ -203,12 +264,10 @@ class HomeScreen extends StatelessWidget {
                                     );
                                     List<Chat> chatRoom = [chat];
                                     context.read<ChatRoomBloc>().add(
-                                        UpdateChatRoom(
+                                        SendMessage(
                                             inputMessage: inputController.text,
                                             chatRoom: chatRoom));
                                     inputController.clear();
-                                    FocusScope.of(context).unfocus();
-                                    print(currentChatRoom.roomID);
                                   }
                                 },
                                 icon: Icon(
@@ -227,13 +286,13 @@ class HomeScreen extends StatelessWidget {
                     flex: 8,
                     child: Center(
                       child: Container(
-                        width: screenSize.width * 0.2,
+                        width: screenSize.width * 0.15,
                         padding: EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Colors.white38,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100))),
-                        child: Image.asset('assets/images/gpt.png'),
+                        child: Image.asset('assets/images/icon.png'),
                       ),
                     ),
                   ),
@@ -265,6 +324,13 @@ class HomeScreen extends StatelessWidget {
                               flex: 1,
                               child: IconButton(
                                 onPressed: () {
+                                  final FocusScopeNode currentScope =
+                                      FocusScope.of(context);
+                                  if (!currentScope.hasPrimaryFocus &&
+                                      currentScope.hasFocus) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  }
                                   if (inputController.text.trim() == '') {
                                     print('empty input');
                                   } else {
@@ -287,12 +353,10 @@ class HomeScreen extends StatelessWidget {
                                     );
                                     List<Chat> chatRoom = [chat];
                                     context.read<ChatRoomBloc>().add(
-                                        UpdateChatRoom(
+                                        SendMessage(
                                             inputMessage: inputController.text,
                                             chatRoom: chatRoom));
                                     inputController.clear();
-                                    FocusScope.of(context).unfocus();
-                                    print(id);
                                   }
                                 },
                                 icon: Icon(

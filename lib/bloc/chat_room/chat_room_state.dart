@@ -16,3 +16,13 @@ class ChatRoomStateUpdate extends ChatRoomState {
 class ChatRoomStateLoading extends ChatRoomState {
   ChatRoomStateLoading({required List<Chat> chatRoom}) : super(chatRoom: chatRoom);
 }
+
+class ChatRoomStateDone extends ChatRoomState {
+  ChatRoomStateDone({required List<Chat> chatRoom}) : super(chatRoom: chatRoom);
+}
+
+class ChatRoomStateError extends ChatRoomState {
+  String errorMessage;
+
+  ChatRoomStateError({required this.errorMessage, required List<Chat> chatRoom}) : super(chatRoom: chatRoom);
+}
