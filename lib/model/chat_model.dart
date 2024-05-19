@@ -10,4 +10,13 @@ class Chat {
     required this.creatTime,
     required this.message,
   });
+
+  factory Chat.fromMap(Map<String, dynamic> map) {
+    return Chat(
+      roomID: map['roomID'],
+      roomTitle: map['roomTitle'],
+      creatTime: map['creatTime'],
+      message: List.from(map['message']),
+    );
+  }
 }

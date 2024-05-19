@@ -36,14 +36,6 @@ class HomeScreen extends StatelessWidget {
               return IconButton(
                 onPressed: () {
                   Scaffold.of(context).openDrawer();
-                  final chatRoom = context.read<ChatRoomBloc>().state.chatRoom;
-                  if (chatRoom.isNotEmpty) {
-                    List message = chatRoom[0].message;
-                    if(message.length > 1) {
-                      final newChatRoom = chatRoom[0];
-                      context.read<ChatBloc>().add(CreateChat(chat: newChatRoom));
-                    }                    
-                  }
                 },
                 icon: Icon(
                   Icons.menu,
@@ -62,6 +54,9 @@ class HomeScreen extends StatelessWidget {
           actions: [
             BlocBuilder<ChatRoomBloc, ChatRoomState>(
               builder: (context, state) {
+                if(state is ChatRoomStateInitial) {
+                  context.read<ChatBloc>().add(LoadData());
+                }
                 if(state is ChatRoomStateUpdate && state.chatRoom.isNotEmpty || state is ChatRoomStateError) {
                   return IconButton(
                     onPressed: () {
@@ -117,9 +112,9 @@ class HomeScreen extends StatelessWidget {
                         return ListTile(
                           title: Text(
                             item['role'] == 'user' ? 'Bạn:' : 'AI:',
-                            style: TextStyle(color: Colors.white38),
+                            style: TextStyle(color: Colors.white),
                           ),
-                          subtitle: Text(item['parts'][0]['text']),
+                          subtitle: Text(item['parts'][0]['text'], style: TextStyle(color: Colors.white38),),
                         );
                       },
                     ),
@@ -141,7 +136,7 @@ class HomeScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         border: Border(
                           top: BorderSide(
-                            color: Colors.white30,
+                            color: Colors.white38,
                             width: 1,
                           ),
                         ),
@@ -167,7 +162,7 @@ class HomeScreen extends StatelessWidget {
                                 onPressed: () {},
                                 icon: Icon(
                                   Icons.send,
-                                  color: Colors.white38,
+                                  color: Colors.white,
                                 ),
                               ))
                         ],
@@ -175,8 +170,11 @@ class HomeScreen extends StatelessWidget {
                 ],
               );
             }
-            if (state.chatRoom.isNotEmpty) {
+            if (state is ChatRoomStateUpdate && state.chatRoom.isNotEmpty) {
               final chatRoom = state.chatRoom[0];
+              if(chatRoom.message.length > 1) {
+                context.read<ChatBloc>().add(CreateChat(chat: chatRoom));
+              }   
               List messageList = chatRoom.message;
               messageList = messageList.reversed.toList();
               return Column(
@@ -193,19 +191,19 @@ class HomeScreen extends StatelessWidget {
                         return ListTile(
                             title: Text(
                               item['role'] == 'user' ? 'Bạn:' : 'AI:',
-                              style: TextStyle(color: Colors.white38),
+                              style: TextStyle(color: Colors.white),
                             ),
                             subtitle: item['role'] == 'user'
-                                ? Text(item['parts'][0]['text'])
+                                ? Text(item['parts'][0]['text'], style: TextStyle(color: Colors.white38),)
                                 : isLastItem
                                     ? AnimatedTextKit(
                                         animatedTexts: [
                                           TypewriterAnimatedText(
-                                              item['parts'][0]['text']),
+                                              item['parts'][0]['text'], textStyle: TextStyle(color: Colors.white38)),
                                         ],
                                         isRepeatingAnimation: false,
                                       )
-                                    : Text(item['parts'][0]['text']));
+                                    : Text(item['parts'][0]['text'], style: TextStyle(color: Colors.white38),),);
                       },
                     ),
                   ),
@@ -214,7 +212,7 @@ class HomeScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         border: Border(
                           top: BorderSide(
-                            color: Colors.white30,
+                            color: Colors.white38,
                             width: 1,
                           ),
                         ),
@@ -272,7 +270,7 @@ class HomeScreen extends StatelessWidget {
                                 },
                                 icon: Icon(
                                   Icons.send,
-                                  color: Colors.white38,
+                                  color: Colors.white,
                                 ),
                               ))
                         ],
@@ -301,7 +299,7 @@ class HomeScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         border: Border(
                           top: BorderSide(
-                            color: Colors.white30,
+                            color: Colors.white38,
                             width: 1,
                           ),
                         ),
@@ -361,7 +359,7 @@ class HomeScreen extends StatelessWidget {
                                 },
                                 icon: Icon(
                                   Icons.send,
-                                  color: Colors.white38,
+                                  color: Colors.white,
                                 ),
                               ))
                         ],

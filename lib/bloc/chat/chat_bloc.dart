@@ -9,6 +9,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<CreateChat>(_CreateChat);
     on<UpdateChat>(_UpdateChat);
     on<DeleteChat>(_DeleteChat);
+    on<LoadData>(_LoadData);
   }
 
   void _CreateChat(CreateChat event, Emitter<ChatState> emit) {
@@ -38,9 +39,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(ChatStateUpdate(chat: state.chat));
   }
 
-  void _DeleteChat(DeleteChat event, Emitter<ChatState> emit) {
-    // ChatDatabase().removeDoc(docID: event.chat.roomID);
+  void _DeleteChat(DeleteChat event, Emitter<ChatState> emit) async {
+    print(event.chat.roomID);
+    ChatDatabase().removeDoc(docID: event.chat.roomID);
     state.chat.remove(event.chat);
+    emit(ChatStateUpdate(chat: state.chat));
+  }
+
+  void _LoadData(LoadData event, Emitter<ChatState> emit) async {
+    final result = await ChatDatabase().getDataCollection();
+    List<Chat> chat = result.map((map) => Chat.fromMap(map)).toList();
+    state.chat = chat;
     emit(ChatStateUpdate(chat: state.chat));
   }
 }

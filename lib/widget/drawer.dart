@@ -24,7 +24,7 @@ class DrawerBuilder extends StatelessWidget {
             if (state is ChatStateInitial) {
               print('state is ChatStateInitial');
             }
-            if (state is ChatStateUpdate) {
+            if (state is ChatStateUpdate && state.chat.isNotEmpty) {
               final chatList = state.chat;
               final reverseChatList = chatList.reversed.toList();
               final chatRoom = context.read<ChatRoomBloc>().state.chatRoom;
@@ -63,15 +63,19 @@ class DrawerBuilder extends StatelessWidget {
                         );
                       },
                       child: Container(
-                        margin: EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                            color: chatRoom.isNotEmpty
-                                ? item.roomID == chatRoom[0].roomID
-                                    ? Colors.white24
-                                    : null
-                                : null,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
+                          color: chatRoom.isNotEmpty
+                              ? item.roomID == chatRoom[0].roomID
+                                  ? Colors.white24
+                                  : null
+                              : null,
+                          border: chatRoom.isNotEmpty
+                              ? item.roomID != chatRoom[0].roomID
+                                  ? Border(
+                                      bottom: BorderSide(color: Colors.white38))
+                                  : null
+                              : null,
+                        ),
                         child: Slidable(
                           endActionPane:
                               ActionPane(motion: StretchMotion(), children: [
@@ -101,11 +105,13 @@ class DrawerBuilder extends StatelessWidget {
                                       fontWeight: FontWeight.bold)),
                               subtitle: Text(
                                 'Tin nhắn cuối: ${item.message.last['parts'].last['text']}',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: chatRoom.isNotEmpty
                                       ? item.roomID == chatRoom[0].roomID
                                           ? Colors.white
-                                          : null
+                                          : Colors.white38
                                       : null,
                                 ),
                               ),

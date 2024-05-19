@@ -1,6 +1,7 @@
 import 'package:chat_box_ai/api/api_helper.dart';
 import 'package:chat_box_ai/model/chat_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localstore/localstore.dart';
 part 'chat_room_event.dart';
 part 'chat_room_state.dart';
 
@@ -32,6 +33,16 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
         message: newMessage,
       );
       List<Chat> newChatRoom = [chat];
+      final db = Localstore.instance;
+      final id = chat.roomID;
+      db.collection('chat').doc(id).set({
+        'roomID': chat.roomID,
+        'roomTitle': chat.roomTitle,
+        'creatTime': chat.creatTime,
+        'message': chat.message,
+      }).then((value) {
+        print(value);
+      });
       emit(ChatRoomStateUpdate(chatRoom: newChatRoom));
     }catch(e){
       emit(ChatRoomStateError(errorMessage: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau :(', chatRoom: state.chatRoom));
