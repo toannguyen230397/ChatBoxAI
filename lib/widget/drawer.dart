@@ -26,6 +26,11 @@ class DrawerBuilder extends StatelessWidget {
             }
             if (state is ChatStateUpdate && state.chat.isNotEmpty) {
               final chatList = state.chat;
+              chatList.sort((a,b) {
+                var aTimeStamp = a.creatTime;
+                var bTimeStamp = b.creatTime;
+                return aTimeStamp.compareTo(bTimeStamp);
+              });
               final reverseChatList = chatList.reversed.toList();
               final chatRoom = context.read<ChatRoomBloc>().state.chatRoom;
               return ListView.builder(
@@ -40,6 +45,9 @@ class DrawerBuilder extends StatelessWidget {
                         context
                             .read<ChatRoomBloc>()
                             .add(UpdateChatRoom(chatRoom: selectedChatRoom));
+                        context
+                            .read<ChatRoomBloc>()
+                            .add(UpdateChatRoomType(type: 'navigation'));
                         Navigator.of(context).pushReplacement(
                           PageRouteBuilder(
                             pageBuilder:

@@ -26,3 +26,9 @@ class ChatRoomStateError extends ChatRoomState {
 
   ChatRoomStateError({required this.errorMessage, required List<Chat> chatRoom}) : super(chatRoom: chatRoom);
 }
+
+class ChatRoomStateTypeUpdate extends ChatRoomState {
+  String type;
+
+  ChatRoomStateTypeUpdate({required this.type, required List<Chat> chatRoom}) : super(chatRoom: chatRoom);
+}

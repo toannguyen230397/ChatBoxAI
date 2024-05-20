@@ -12,6 +12,12 @@ class UpdateChatRoom extends ChatRoomEvent {
   UpdateChatRoom({required this.chatRoom});
 }
 
+class UpdateChatRoomType extends ChatRoomEvent {
+  String type;
+
+  UpdateChatRoomType({required this.type});
+}
+
 class SendMessage extends ChatRoomEvent {
   String inputMessage;
   List<Chat> chatRoom;

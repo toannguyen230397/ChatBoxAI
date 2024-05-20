@@ -11,6 +11,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     on<DeleteChatRoom>(_DeleteChatRoom);
     on<CreateChatRoom>(_CreateChatRoom);
     on<UpdateChatRoom>(_UpdateChatRoom);
+    on<UpdateChatRoomType>(_UpdateChatRoomType);
   }
 
   Future<void> _SendMessage(
@@ -58,6 +59,10 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   void _UpdateChatRoom(UpdateChatRoom event, Emitter<ChatRoomState> emit) {
     state.chatRoom = event.chatRoom;
     emit(ChatRoomStateUpdate(chatRoom: state.chatRoom));
+  }
+
+  void _UpdateChatRoomType(UpdateChatRoomType event, Emitter<ChatRoomState> emit) {
+    emit(ChatRoomStateTypeUpdate(type: event.type, chatRoom: state.chatRoom));
   }
 
   void _DeleteChatRoom(DeleteChatRoom event, Emitter<ChatRoomState> emit) {
