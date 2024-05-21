@@ -23,9 +23,13 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
       emit(ChatRoomStateLoading(chatRoom: state.chatRoom));
       final currentChatRoom = event.chatRoom[0];
       List<dynamic> currentMessage = currentChatRoom.message;
+
       final messageResponse = await ChatAPI()
           .sendRequest(event.inputMessage, currentMessage);
-      if(messageResponse.isEmpty || messageResponse == null) {
+
+      String text = messageResponse["parts"][0]["text"];
+
+      if(text.isEmpty) {
         emit(ChatRoomStateError(errorMessage: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau :(', chatRoom: state.chatRoom));
       } else {
         List<dynamic> newMessage = currentMessage;
@@ -48,7 +52,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
           print(value);
         });
         emit(ChatRoomStateUpdate(chatRoom: newChatRoom));
-      }
+      }   
     }catch(e){
       emit(ChatRoomStateError(errorMessage: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau :(', chatRoom: state.chatRoom));
       print('An unexpected error occurred: $e');
