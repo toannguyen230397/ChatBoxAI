@@ -22,29 +22,33 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     try{
       emit(ChatRoomStateLoading(chatRoom: state.chatRoom));
       final currentChatRoom = event.chatRoom[0];
-      List<dynamic> history = currentChatRoom.message;
+      List<dynamic> currentMessage = currentChatRoom.message;
       final messageResponse = await ChatAPI()
-          .sendRequest(event.inputMessage, history);
-      List<dynamic> newMessage = history;
-      newMessage.add(messageResponse);
-      final chat = Chat(
-        roomID: currentChatRoom.roomID,
-        roomTitle: currentChatRoom.roomTitle,
-        creatTime: currentChatRoom.creatTime,
-        message: newMessage,
-      );
-      List<Chat> newChatRoom = [chat];
-      final db = Localstore.instance;
-      final id = chat.roomID;
-      db.collection('chat').doc(id).set({
-        'roomID': chat.roomID,
-        'roomTitle': chat.roomTitle,
-        'creatTime': chat.creatTime,
-        'message': chat.message,
-      }).then((value) {
-        print(value);
-      });
-      emit(ChatRoomStateUpdate(chatRoom: newChatRoom));
+          .sendRequest(event.inputMessage, currentMessage);
+      if(messageResponse.isEmpty || messageResponse == null) {
+        emit(ChatRoomStateError(errorMessage: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau :(', chatRoom: state.chatRoom));
+      } else {
+        List<dynamic> newMessage = currentMessage;
+        newMessage.add(messageResponse);
+        final chat = Chat(
+          roomID: currentChatRoom.roomID,
+          roomTitle: currentChatRoom.roomTitle,
+          creatTime: currentChatRoom.creatTime,
+          message: newMessage,
+        );
+        List<Chat> newChatRoom = [chat];
+        final db = Localstore.instance;
+        final id = chat.roomID;
+        db.collection('chat').doc(id).set({
+          'roomID': chat.roomID,
+          'roomTitle': chat.roomTitle,
+          'creatTime': chat.creatTime,
+          'message': chat.message,
+        }).then((value) {
+          print(value);
+        });
+        emit(ChatRoomStateUpdate(chatRoom: newChatRoom));
+      }
     }catch(e){
       emit(ChatRoomStateError(errorMessage: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau :(', chatRoom: state.chatRoom));
       print('An unexpected error occurred: $e');
