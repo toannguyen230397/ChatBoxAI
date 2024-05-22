@@ -11,12 +11,12 @@ Or you can run with VSCode:
 - Enjoy!
 
 ## Functions/Features of the app
-### Chatting:
+**Chatting:**
 ![chatting](https://github.com/toannguyen230397/ChatBoxAI/assets/121475751/d9a553c8-c037-41b3-93aa-86456bb409ee)
-### Create chat room:
+**Create chat room:**
 ![create_chat_room](https://github.com/toannguyen230397/ChatBoxAI/assets/121475751/e12c787d-eb13-492c-b8dd-feffbaa40dd5)
-### Select chat room:
+**Select chat room:**
 ![select_chat_room](https://github.com/toannguyen230397/ChatBoxAI/assets/121475751/0d5e2cee-e5fe-48d5-8086-06672f833257)
-### Delete chat room:
+**Delete chat room:**
 ![delete_chat_room](https://github.com/toannguyen230397/ChatBoxAI/assets/121475751/ef0e3d63-64cc-454e-8287-1bcd8aedcf5e)
 
