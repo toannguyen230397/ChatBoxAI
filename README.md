@@ -1,6 +1,5 @@
-# chat_box_ai
-
-A new Flutter project.
+# About this app
+This is an application built with Flutter that allows users to chat with AI. The app is designed with a friendly and user-friendly interface, enabling users to start conversations by asking questions, sharing thoughts, or even engaging in some intellectual challenges. The AI in this app can understand and directly respond to the content provided by users, thus creating a strong and engaging interactive experience.
 
 ## Getting Started
 
