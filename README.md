@@ -9,3 +9,7 @@ Or you can run with VSCode:
 - Clone this Project, then Open it in VSCode
 - Run the project with Android Emulator
 - Enjoy!
+
+##Functions/Features of the app
+###Chatting:
+
