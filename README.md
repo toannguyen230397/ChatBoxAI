@@ -11,7 +11,7 @@ Or you can run with VSCode:
 - Enjoy!
 
 ## Functions/Features of the app
-**Chatting:**
+**Chatting:**/n
 ![chatting](https://github.com/toannguyen230397/ChatBoxAI/assets/121475751/d9a553c8-c037-41b3-93aa-86456bb409ee)
 **Create chat room:**
 ![create_chat_room](https://github.com/toannguyen230397/ChatBoxAI/assets/121475751/e12c787d-eb13-492c-b8dd-feffbaa40dd5)
