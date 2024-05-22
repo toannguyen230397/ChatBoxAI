@@ -10,6 +10,6 @@ Or you can run with VSCode:
 - Run the project with Android Emulator
 - Enjoy!
 
-##Functions/Features of the app
-###Chatting:
+## Functions/Features of the app
+### Chatting:
 
