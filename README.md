@@ -12,4 +12,5 @@ Or you can run with VSCode:
 
 ## Functions/Features of the app
 ### Chatting:
+![chatting](https://github.com/toannguyen230397/ChatBoxAI/assets/121475751/d9a553c8-c037-41b3-93aa-86456bb409ee)
 
