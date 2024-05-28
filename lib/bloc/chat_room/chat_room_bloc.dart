@@ -18,6 +18,8 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
       SendMessage event, Emitter<ChatRoomState> emit) async {
     state.chatRoom = event.chatRoom;
     emit(ChatRoomStateUpdate(chatRoom: state.chatRoom));
+
+    emit(ChatRoomStateLoading(chatRoom: state.chatRoom));
     
     try{
       emit(ChatRoomStateLoading(chatRoom: state.chatRoom));

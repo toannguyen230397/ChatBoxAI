@@ -1,6 +1,7 @@
 import 'package:chat_box_ai/bloc/chat/chat_bloc.dart';
 import 'package:chat_box_ai/bloc/chat_room/chat_room_bloc.dart';
 import 'package:chat_box_ai/model/chat_model.dart';
+import 'package:chat_box_ai/widget/ai_message_widget.dart';
 import 'package:chat_box_ai/widget/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localstore/localstore.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:lottie/lottie.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -117,25 +117,59 @@ class HomeScreen extends StatelessWidget {
                         itemCount: messageList.length,
                         itemBuilder: (context, index) {
                           final item = messageList[index];
-                          return ListTile(
-                            title: Text(
-                              item['role'] == 'user' ? 'Bạn:' : 'AI:',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            subtitle: Text(item['parts'][0]['text'], style: TextStyle(color: Colors.white38),),
+                          return Column(
+                            children: [
+                              ListTile(
+                                title: Row(
+                                    children: [
+                                      item['role'] == 'user' ? Container() :
+                                      Container(
+                                        decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.all(Radius.circular(100))),
+                                        child: Image.asset('assets/images/icon.png', width: 10,)
+                                      ),
+                                      Text(
+                                        item['role'] == 'user' ? 'Bạn:' : ' Gemini AI:',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                subtitle: AIMessageWidget(message: item['parts'][0]['text'], status: 'normad',),
+                              ),
+                            ],
                           );
                         },
                       ),
                     ),
                     Container(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'AI:',
-                            style: TextStyle(color: Colors.white),
+                          Container(
+                            padding: EdgeInsets.only(left: 15),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                      decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(100))),
+                                      child: Image.asset('assets/images/icon.png', width: 10,)
+                                    ),
+                                Text(
+                                  ' Gemini AI:',
+                                  style: TextStyle(color: Colors.white, fontSize: 17),
+                                ),
+                              ],
+                            ),
                           ),
                           Lottie.asset('assets/animations/loading_animation.json',
-                              width: 50),
+                            alignment: Alignment.centerLeft,
+                            width: 50
+                          ),
                         ],
                       ),
                     ),
@@ -193,11 +227,23 @@ class HomeScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final item = messageList[index];
                           return ListTile(
-                              title: Text(
-                                item['role'] == 'user' ? 'Bạn:' : 'AI:',
-                                style: TextStyle(color: Colors.white),
+                              title: Row(
+                                children: [
+                                  item['role'] == 'user' ? Container() :
+                                  Container(
+                                    decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100))),
+                                    child: Image.asset('assets/images/icon.png', width: 10,)
+                                  ),
+                                  Text(
+                                    item['role'] == 'user' ? 'Bạn:' : ' Gemini AI:',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
                               ),
-                              subtitle: Text(item['parts'][0]['text'], style: TextStyle(color: Colors.white38),));
+                              subtitle: AIMessageWidget(message: item['parts'][0]['text'], status: 'normad',));
                         },
                       ),
                     ),
@@ -291,21 +337,27 @@ class HomeScreen extends StatelessWidget {
                           final item = messageList[index];
                           final isLastItem = index == 0;
                           return ListTile(
-                              title: Text(
-                                item['role'] == 'user' ? 'Bạn:' : 'AI:',
-                                style: TextStyle(color: Colors.white),
+                              title: Row(
+                                children: [
+                                  item['role'] == 'user' ? Container() :
+                                  Container(
+                                    decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100))),
+                                    child: Image.asset('assets/images/icon.png', width: 10,)
+                                  ),
+                                  Text(
+                                    item['role'] == 'user' ? 'Bạn:' : ' Gemini AI:',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
                               ),
                               subtitle: item['role'] == 'user'
-                                  ? Text(item['parts'][0]['text'], style: TextStyle(color: Colors.white38),)
+                                  ? AIMessageWidget(message: item['parts'][0]['text'], status: 'normad',)
                                   : isLastItem
-                                      ? AnimatedTextKit(
-                                          animatedTexts: [
-                                            TypewriterAnimatedText(
-                                                item['parts'][0]['text'], textStyle: TextStyle(color: Colors.white38)),
-                                          ],
-                                          isRepeatingAnimation: false,
-                                        )
-                                      : Text(item['parts'][0]['text'], style: TextStyle(color: Colors.white38),),);
+                                      ? AIMessageWidget(message: item['parts'][0]['text'], status: 'chatting',)
+                                      : AIMessageWidget(message: item['parts'][0]['text'], status: 'normad',),);
                         },
                       ),
                     ),
