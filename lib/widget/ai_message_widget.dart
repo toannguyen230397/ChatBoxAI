@@ -113,7 +113,7 @@ class _AIMessageWidgetState extends State<AIMessageWidget> with SingleTickerProv
               children: [
                 AnimatedTextKit(
                   animatedTexts: [
-                    TypewriterAnimatedText(part.text!, textStyle: TextStyle(color: Colors.white38, fontFamily: 'Roboto')),
+                    TypewriterAnimatedText(part.text!, textStyle: TextStyle(fontSize: 14, color: Colors.white38, fontFamily: 'Roboto')),
                   ],
                   isRepeatingAnimation: false,
                   onFinished: () async {
@@ -156,7 +156,7 @@ class _AIMessageWidgetState extends State<AIMessageWidget> with SingleTickerProv
           } else if (part.text != null && part.code == null) {
             return AnimatedTextKit(
               animatedTexts: [
-                TypewriterAnimatedText(part.text!, textStyle: TextStyle(color: Colors.white38, fontFamily: 'Roboto')),
+                TypewriterAnimatedText(part.text!, textStyle: TextStyle(fontSize: 14, color: Colors.white38, fontFamily: 'Roboto')),
               ],
               isRepeatingAnimation: false,
               onFinished: () {
@@ -175,13 +175,13 @@ class _AIMessageWidgetState extends State<AIMessageWidget> with SingleTickerProv
           if (part.text != null && part.code != null) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text(part.text!, style: TextStyle(color: Colors.white38, fontFamily: 'Roboto'),), CodeFieldWidget(code: part.code!)],
+              children: [Text(part.text!, style: TextStyle(fontSize: 14, color: Colors.white38, fontFamily: 'Roboto'),), CodeFieldWidget(code: part.code!)],
             );
           }
           if (part.code != null && part.text == null) {
             return CodeFieldWidget(code: part.code!);
           } else if (part.text != null && part.code == null) {
-            return Text(part.text!, style: TextStyle(color: Colors.white38, fontFamily: 'Roboto'));
+            return Text(part.text!, style: TextStyle(fontSize: 14, color: Colors.white38, fontFamily: 'Roboto'));
           } else {
             return SizedBox.shrink();
           }
