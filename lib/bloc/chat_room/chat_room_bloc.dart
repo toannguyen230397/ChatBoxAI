@@ -14,24 +14,21 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     on<UpdateChatRoomType>(_UpdateChatRoomType);
   }
 
-  Future<void> _SendMessage(
-      SendMessage event, Emitter<ChatRoomState> emit) async {
-    state.chatRoom = event.chatRoom;
-    emit(ChatRoomStateUpdate(chatRoom: state.chatRoom));
+  Future<void> _SendMessage(SendMessage event, Emitter<ChatRoomState> emit) async {
+  state.chatRoom = event.chatRoom;
+  emit(ChatRoomStateUpdate(chatRoom: state.chatRoom));
 
-    emit(ChatRoomStateLoading(chatRoom: state.chatRoom));
-    
-    try{
-      emit(ChatRoomStateLoading(chatRoom: state.chatRoom));
-      final currentChatRoom = event.chatRoom[0];
-      List<dynamic> currentMessage = currentChatRoom.message;
+  emit(ChatRoomStateLoading(chatRoom: state.chatRoom));
 
-      final messageResponse = await ChatAPI()
-          .sendRequest(event.inputMessage, currentMessage);
+  try {
+    final currentChatRoom = event.chatRoom[0];
+    List<dynamic> currentMessage = currentChatRoom.message;
 
+    // Awaiting for each value emitted by the Stream returned by sendRequest
+    await for (final messageResponse in ChatAPI().sendRequest(event.inputMessage, currentMessage)) {
       String text = messageResponse["parts"][0]["text"];
 
-      if(text.isEmpty) {
+      if (text.isEmpty) {
         emit(ChatRoomStateError(errorMessage: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau :(', chatRoom: state.chatRoom));
       } else {
         List<dynamic> newMessage = currentMessage;
@@ -45,21 +42,21 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
         List<Chat> newChatRoom = [chat];
         final db = Localstore.instance;
         final id = chat.roomID;
-        db.collection('chat').doc(id).set({
+        await db.collection('chat').doc(id).set({
           'roomID': chat.roomID,
           'roomTitle': chat.roomTitle,
           'creatTime': chat.creatTime,
           'message': chat.message,
-        }).then((value) {
-          print(value);
         });
         emit(ChatRoomStateUpdate(chatRoom: newChatRoom));
-      }   
-    }catch(e){
-      emit(ChatRoomStateError(errorMessage: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau :(', chatRoom: state.chatRoom));
-      print('An unexpected error occurred: $e');
+      }
     }
+  } catch (e) {
+    emit(ChatRoomStateError(errorMessage: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau :(', chatRoom: state.chatRoom));
+    print('An unexpected error occurred: $e');
   }
+}
+
 
   void _CreateChatRoom(CreateChatRoom event, Emitter<ChatRoomState> emit) {
     state.chatRoom = [];

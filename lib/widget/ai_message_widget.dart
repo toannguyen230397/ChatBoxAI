@@ -1,6 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:chat_box_ai/bloc/chat_room/chat_room_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/dark.dart';
 
@@ -99,6 +101,11 @@ class _AIMessageWidgetState extends State<AIMessageWidget> with SingleTickerProv
       crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(messageParts.length, (index) {
         MessagePart part = messageParts[index];
+        if(selectedIndex == messageParts.length) {
+          final chatRoom = context.read<ChatRoomBloc>().state.chatRoom;
+          context.read<ChatRoomBloc>().add(UpdateChatRoom(chatRoom: chatRoom));
+          context.read<ChatRoomBloc>().add(UpdateChatRoomType(type: 'endResponse'));
+        }
         if (index == selectedIndex && widget.status == 'chatting') {
           if (part.text != null && part.code != null) {
             return Column(
@@ -106,7 +113,7 @@ class _AIMessageWidgetState extends State<AIMessageWidget> with SingleTickerProv
               children: [
                 AnimatedTextKit(
                   animatedTexts: [
-                    TypewriterAnimatedText(part.text!, textStyle: TextStyle(color: Colors.white38)),
+                    TypewriterAnimatedText(part.text!, textStyle: TextStyle(color: Colors.white38, fontFamily: 'Roboto')),
                   ],
                   isRepeatingAnimation: false,
                   onFinished: () async {
@@ -149,7 +156,7 @@ class _AIMessageWidgetState extends State<AIMessageWidget> with SingleTickerProv
           } else if (part.text != null && part.code == null) {
             return AnimatedTextKit(
               animatedTexts: [
-                TypewriterAnimatedText(part.text!, textStyle: TextStyle(color: Colors.white38)),
+                TypewriterAnimatedText(part.text!, textStyle: TextStyle(color: Colors.white38, fontFamily: 'Roboto')),
               ],
               isRepeatingAnimation: false,
               onFinished: () {
@@ -168,13 +175,13 @@ class _AIMessageWidgetState extends State<AIMessageWidget> with SingleTickerProv
           if (part.text != null && part.code != null) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text(part.text!, style: TextStyle(color: Colors.white38),), CodeFieldWidget(code: part.code!)],
+              children: [Text(part.text!, style: TextStyle(color: Colors.white38, fontFamily: 'Roboto'),), CodeFieldWidget(code: part.code!)],
             );
           }
           if (part.code != null && part.text == null) {
             return CodeFieldWidget(code: part.code!);
           } else if (part.text != null && part.code == null) {
-            return Text(part.text!, style: TextStyle(color: Colors.white38));
+            return Text(part.text!, style: TextStyle(color: Colors.white38, fontFamily: 'Roboto'));
           } else {
             return SizedBox.shrink();
           }

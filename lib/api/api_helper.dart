@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 class ChatAPI {
   final String apiURL = 'https://chatboxai-backend.onrender.com/';
 
-  Future<Map<String, dynamic>> sendRequest(String msg, List history) async {
+  Stream<Map<String, dynamic>> sendRequest(String msg, List history) async* {
     final response = await http.post(
       Uri.parse('${apiURL}geminiAPI'),
       headers: <String, String>{
@@ -17,7 +17,7 @@ class ChatAPI {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
-      return responseData;
+      yield responseData;
     } else {
       throw Exception('Failed to post data');
     }
