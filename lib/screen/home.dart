@@ -441,7 +441,7 @@ class HomeScreen extends StatelessWidget {
                           width: screenSize.width * 0.15,
                           padding: EdgeInsets.all(5),
                           decoration: BoxDecoration(
-                              color: Colors.white38,
+                              color: Colors.white,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100))),
                           child: Image.asset('assets/images/icon.png'),

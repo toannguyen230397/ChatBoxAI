@@ -3,8 +3,12 @@ import 'package:chat_box_ai/bloc/chat_room/chat_room_bloc.dart';
 import 'package:chat_box_ai/screen/home.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Future.delayed(Duration(seconds: 2));
+  FlutterNativeSplash.remove(); 
   runApp(const MyApp());
 }
 
