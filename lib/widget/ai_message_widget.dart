@@ -204,6 +204,7 @@ class _CodeFieldWidgetState extends State<CodeFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Color(0xFF303030),
       margin: EdgeInsets.only(top: 10, bottom: 10, left: 10),
       child: HighlightView(
         widget.code,

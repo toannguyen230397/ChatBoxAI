@@ -1,3 +1,4 @@
+
 part of 'chat_room_bloc.dart';
 
 abstract class ChatRoomEvent {}
